@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CineHack X</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#050510;
+    color:white;
+    overflow-x:hidden;
+}
+
+/* FUNDO */
+body::before{
+    content:"";
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:
+    radial-gradient(circle at top left,#00ffcc22,transparent 25%),
+    radial-gradient(circle at bottom right,#ff00ff22,transparent 25%);
+    z-index:-1;
+}
+
+/* HEADER */
+header{
+    text-align:center;
+    padding:40px 20px;
+}
+
+header h1{
+    font-size:4rem;
+    color:#00ffee;
+    text-shadow:0 0 20px #00ffee;
+}
+
+header p{
+    color:#aaa;
+    margin-top:10px;
+}
+
+/* FILTROS */
+.controls{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:15px;
+    padding:20px;
+}
+
+input, select{
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#111827;
+    color:white;
+    font-size:1rem;
+    outline:none;
+    min-width:220px;
+    border:1px solid #00ffee55;
+}
+
+input:focus,
+select:focus{
+    box-shadow:0 0 15px #00ffee;
+}
+
+/* FILMES */
+.movies{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+    padding:40px;
+}
+
+.card{
+    background:#111827;
+    border-radius:18px;
+    overflow:hidden;
+    transition:0.4s;
+    border:1px solid #00ffee33;
+    position:relative;
+}
+
+.card:hover{
+    transform:translateY(-10px) scale(1.03);
+    box-shadow:0 0 25px #00ffee66;
+}
+
+.card img{
+    width:100%;
+    height:360px;
+    object-fit:cover;
+}
+
+.info{
+    padding:20px;
+}
+
+.info h2{
+    color:#00ffee;
+    margin-bottom:10px;
+}
+
+.tag{
+    display:inline-block;
+    padding:6px 12px;
+    background:#00ffee22;
+    border:1px solid #00ffee55;
+    border-radius:20px;
+    margin-top:10px;
+    font-size:0.8rem;
+}
+
+.age{
+    position:absolute;
+    top:10px;
+    right:10px;
+    background:#ff0055;
+    padding:8px 12px;
+    border-radius:50px;
+    font-weight:bold;
+    box-shadow:0 0 15px #ff0055;
+}
+
+/* FOOTER */
+footer{
+    text-align:center;
+    padding:30px;
+    color:#666;
+}
+
+.glow{
+    animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+    from{
+        text-shadow:0 0 10px #00ffee;
+    }
+    to{
+        text-shadow:0 0 25px #00ffee,
+        0 0 40px #00ffee;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1 class="glow">CINEHACK X</h1>
+    <p>O sistema cinematográfico hacker mais insano da galáxia</p>
+</header>
+
+<div class="controls">
+    <input type="text" id="search" placeholder="Pesquisar filme...">
+
+    <select id="genreFilter">
+        <option value="all">Todos os Gêneros</option>
+        <option value="Ação">Ação</option>
+        <option value="Ficção">Ficção</option>
+        <option value="Terror">Terror</option>
+        <option value="Drama">Drama</option>
+        <option value="Animação">Animação</option>
+    </select>
+
+    <select id="ageFilter">
+        <option value="all">Todas Idades</option>
+        <option value="Livre">Livre</option>
+        <option value="12">12+</option>
+        <option value="14">14+</option>
+        <option value="16">16+</option>
+        <option value="18">18+</option>
+    </select>
+</div>
+
+<div class="movies" id="movieContainer"></div>
+
+<footer>
+    CineHack X © 2077
+</footer>
+
+<script>
+
+const movies = [
+
+{
+title:"Matrix",
+genre:"Ficção",
+age:"16",
+image:"https://picsum.photos/300/400?1"
+},
+
+{
+title:"Batman",
+genre:"Ação",
+age:"14",
+image:"https://picsum.photos/300/400?2"
+},
+
+{
+title:"Interestelar",
+genre:"Ficção",
+age:"12",
+image:"https://picsum.photos/300/400?3"
+},
+
+{
+title:"Invocação do Mal",
+genre:"Terror",
+age:"18",
+image:"https://picsum.photos/300/400?4"
+},
+
+{
+title:"Toy Story",
+genre:"Animação",
+age:"Livre",
+image:"https://picsum.photos/300/400?5"
+},
+
+{
+title:"Vingadores",
+genre:"Ação",
+age:"12",
+image:"https://picsum.photos/300/400?6"
+},
+
+{
+title:"John Wick",
+genre:"Ação",
+age:"18",
+image:"https://picsum.photos/300/400?7"
+},
+
+{
+title:"Coringa",
+genre:"Drama",
+age:"16",
+image:"https://picsum.photos/300/400?8"
+},
+
+{
+title:"Avatar",
+genre:"Ficção",
+age:"12",
+image:"https://picsum.photos/300/400?9"
+},
+
+{
+title:"Frozen",
+genre:"Animação",
+age:"Livre",
+image:"https://picsum.photos/300/400?10"
+},
+
+{
+title:"IT",
+genre:"Terror",
+age:"18",
+image:"https://picsum.photos/300/400?11"
+},
+
+{
+title:"Pantera Negra",
+genre:"Ação",
+age:"12",
+image:"https://picsum.photos/300/400?12"
+},
+
+{
+title:"Soul",
+genre:"Animação",
+age:"Livre",
+image:"https://picsum.photos/300/400?13"
+},
+
+{
+title:"Duna",
+genre:"Ficção",
+age:"14",
+image:"https://picsum.photos/300/400?14"
+},
+
+{
+title:"O Poço",
+genre:"Drama",
+age:"16",
+image:"https://picsum.photos/300/400?15"
+},
+
+{
+title:"Annabelle",
+genre:"Terror",
+age:"16",
+image:"https://picsum.photos/300/400?16"
+},
+
+{
+title:"Deadpool",
+genre:"Ação",
+age:"18",
+image:"https://picsum.photos/300/400?17"
+},
+
+{
+title:"Shrek",
+genre:"Animação",
+age:"Livre",
+image:"https://picsum.photos/300/400?18"
+},
+
+{
+title:"Clube da Luta",
+genre:"Drama",
+age:"18",
+image:"https://picsum.photos/300/400?19"
+},
+
+{
+title:"Blade Runner",
+genre:"Ficção",
+age:"16",
+image:"https://picsum.photos/300/400?20"
+}
+
+];
+
+const container = document.getElementById("movieContainer");
+const search = document.getElementById("search");
+const genreFilter = document.getElementById("genreFilter");
+const ageFilter = document.getElementById("ageFilter");
+
+function renderMovies(){
+
+    const searchValue = search.value.toLowerCase();
+    const genreValue = genreFilter.value;
+    const ageValue = ageFilter.value;
+
+    container.innerHTML = "";
+
+    const filtered = movies.filter(movie => {
+
+        const matchesSearch =
+        movie.title.toLowerCase().includes(searchValue);
+
+        const matchesGenre =
+        genreValue === "all" || movie.genre === genreValue;
+
+        const matchesAge =
+        ageValue === "all" || movie.age === ageValue;
+
+        return matchesSearch && matchesGenre && matchesAge;
+    });
+
+    filtered.forEach(movie => {
+
+        container.innerHTML += `
+        
+        <div class="card">
+            <span class="age">${movie.age}</span>
+
+            <img src="${movie.image}" alt="${movie.title}">
+
+            <div class="info">
+                <h2>${movie.title}</h2>
+
+                <p>
+                Um dos filmes mais insanos do sistema.
+                </p>
+
+                <span class="tag">${movie.genre}</span>
+            </div>
+        </div>
+
+        `;
+    });
+
+}
+
+search.addEventListener("input", renderMovies);
+genreFilter.addEventListener("change", renderMovies);
+ageFilter.addEventListener("change", renderMovies);
+
+renderMovies();
+
+</script>
+
+</body>
+</html>
